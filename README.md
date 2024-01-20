@@ -2,15 +2,21 @@
 
 A new Flutter project.
 
-## Getting Started
+## How To setUp Firebase
 
-This project is a starting point for a Flutter application.
+1.Go to Firebase Authentication and Enable SignIn provider for email and password 2. Go to firestore Database in firebase console check Rules and add paste below code for authroized person to only read and write permission
 
-A few resources to get you started if this is your first Flutter project:
+'''
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+rules_version = '2';
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+service cloud.firestore {
+match /databases/{database}/documents {
+// Allow read and write access to all documents for authenticated users
+match /{document=\*\*} {
+allow read, write: if request.auth != null;
+}
+}
+}
+
+'''
