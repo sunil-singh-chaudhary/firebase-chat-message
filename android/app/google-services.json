@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "116645713117",
+    "project_id": "chatmeesagetest",
+    "storage_bucket": "chatmeesagetest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:116645713117:android:33948461b321b331d47734",
+        "android_client_info": {
+          "package_name": "com.example.chat_meesage_demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqeoHxpiWhbEKAM0ETlo2gjq_KZU70a44"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
