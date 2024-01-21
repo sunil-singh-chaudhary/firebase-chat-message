@@ -41,7 +41,6 @@ class _UserListState extends State<UserList> {
           widget.currentUserID,
         );
       });
-      // Now, you can upload _imageFile to Firebase Storage
     }
   }
 
@@ -128,7 +127,7 @@ class _UserListState extends State<UserList> {
               fontSize: 12.sp,
             ),
           ),
-          subtitle: Text('   ${currentusername}' ?? '',
+          subtitle: Text('   $currentusername',
               style: TextStyle(fontSize: 12.sp, color: Colors.green)),
         ),
       ),
