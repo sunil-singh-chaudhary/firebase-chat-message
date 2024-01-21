@@ -6,6 +6,7 @@ import 'package:chat_meesage_demo/userList.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -35,6 +36,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    // If not, request permission
+    requestStoragePermission();
   }
 
   @override
@@ -65,5 +68,9 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  void requestStoragePermission() async {
+    await Permission.storage.request();
   }
 }

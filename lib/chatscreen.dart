@@ -23,7 +23,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   FocusNode focusNode = FocusNode();
 
-  late var username;
+  late String username;
+
   @override
   void initState() {
     super.initState();
@@ -34,7 +35,27 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('$username'),
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+                width: 100,
+                child: Text(username, style: const TextStyle(fontSize: 16))),
+            Consumer<FirebaseServices>(
+              builder: (context, value, child) => SizedBox(
+                width: 100,
+                child: Text(
+                  value.isOnlineYes == true ? 'Online' : 'Offline',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color:
+                        value.isOnlineYes == true ? Colors.green : Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -44,7 +65,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     .getChat(widget.currentUserID, widget.receiverID),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   if (snapshot.hasError) {

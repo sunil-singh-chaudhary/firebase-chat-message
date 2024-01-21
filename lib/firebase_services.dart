@@ -1,11 +1,68 @@
+import 'dart:io';
+
 import 'package:chat_meesage_demo/shareprefutils.dart';
 import 'package:chat_meesage_demo/userList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 class FirebaseServices extends ChangeNotifier {
+  bool _isOnlineYes = false;
+  bool get isOnlineYes => _isOnlineYes;
+
+  String _profileImage = '';
+  String get profileImage => _profileImage;
+
+  updateProfileImagePath(String filepath) {
+    _profileImage = filepath;
+    notifyListeners();
+  }
+
+  //Function to check if the user is online
+  Future<void> isOnline(bool isvailable, String uid) async {
+    debugPrint('updating isonline is $isvailable');
+    await FirebaseFirestore.instance.collection('presence').doc(uid).set({
+      'online': isvailable,
+      'lastActive': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<void> uploadImage(File imageFile, String userId) async {
+    String fileName =
+        'profile_images/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    Reference storageReference = FirebaseStorage.instance.ref().child(fileName);
+
+    UploadTask uploadTask = storageReference.putFile(imageFile);
+
+    await uploadTask.whenComplete(() => null);
+    String imageUrl = await storageReference.getDownloadURL();
+
+    updateProfileImage(userId, imageUrl); //update to firebase url of image
+  }
+
+// Update Profile Image on Firebase
+  Future<void> updateProfileImage(String userId, String imageUrl) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    await users.doc(userId).update({'profileImageUrl': imageUrl});
+  }
+
+//Get USEr online offline status from firebase
+  getUserOnlineStatus(String uid) async {
+    CollectionReference presenceCollection =
+        FirebaseFirestore.instance.collection('presence');
+
+    // DocumentSnapshot presenceDoc = await presenceCollection.doc(uid).get();
+    //Listen Live status chnages
+    presenceCollection.doc(uid).snapshots().listen((DocumentSnapshot snapshot) {
+      if (snapshot.exists) {
+        bool isOnline = snapshot['online'] ?? false;
+        _isOnlineYes = isOnline;
+      }
+    });
+  }
+
   // Function to send a message
   Future<void> sendMessage(
       {required String senderId,
